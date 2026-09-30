@@ -625,11 +625,17 @@
       <description summary="mode flags"/>
       <entry name="custom" value="0x1"/>
       <entry name="reduced_blanking" value="0x2" deprecated-since="24"/>
+      <entry name="stereo_side_by_side_half" value="0x4" summary="HDMI 1.4 3D, side by side (half)"/>
+      <entry name="stereo_top_and_bottom" value="0x8" summary="HDMI 1.4 3D, top and bottom"/>
     </enum>
 
     <event name="flags" since="19">
       <description summary="mode flags">
         This event describes the mode's flags.
+
+        A mode with one of the stereo flags is an HDMI 1.4 3D mode: it repeats a 2D mode's
+        size and refresh rate, and setting it turns the display's 3D on, with the output's
+        content drawn into both eyes. Clients should never choose such a mode on their own.
       </description>
       <arg name="flags" type="uint" enum="flags"/>
     </event>
