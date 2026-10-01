@@ -622,6 +622,7 @@
       <entry name="reduced_blanking" value="0x2"/>
       <entry name="stereo_side_by_side_half" value="0x4" summary="HDMI 1.4 3D, side by side (half)"/>
       <entry name="stereo_top_and_bottom" value="0x8" summary="HDMI 1.4 3D, top and bottom"/>
+      <entry name="stereo_frame_packing" value="0x10" summary="HDMI 1.4 3D, frame packing"/>
     </enum>
 
     <event name="flags" since="19">
