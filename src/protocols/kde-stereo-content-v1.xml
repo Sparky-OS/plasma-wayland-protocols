@@ -110,7 +110,7 @@
       surgery and medical training, design review, industrial training).
       Other values are reserved.
     </description>
-    <arg name="class" type="uint" enum="content_class" summary="kind of the content"/>
+    <arg name="content_class" type="uint" enum="content_class" summary="kind of the content"/>
     <arg name="subclass" type="uint" summary="sub-class inside the class, 0 = unspecified"/>
   </request>
 </interface>
