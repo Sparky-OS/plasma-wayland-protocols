@@ -77,6 +77,37 @@
     </description>
     <arg name="content" type="uint" enum="content" summary="packing and eye order"/>
   </request>
+
+  <enum name="content_class">
+    <description summary="kind of the stereo content">
+      The kind of program the content comes from, so the compositor can
+      choose a suggested mode per kind. The standard classes also map to
+      wp_content_type_v1 (scientific is none there): a client that knows
+      wp_content_type_v1 should set it too, so the output's HDMI content
+      type follows as the compositor already does.
+    </description>
+    <entry name="none" value="0" summary="no particular kind"/>
+    <entry name="photo" value="1" summary="stereo photo"/>
+    <entry name="video" value="2" summary="stereo video"/>
+    <entry name="game" value="3" summary="game or other entertainment"/>
+    <entry name="scientific" value="4" summary="work: medicine, design review, industry"/>
+  </enum>
+
+  <request name="set_content_class">
+    <description summary="Declare the content's class and sub-class">
+      Takes effect with the next commit of the surface. The sub-class is
+      per class, append-only, 0 means unspecified. For game: 1 = vr (a
+      VR engine adapted to the display, entertainment), 2 = 3d (a game
+      with its own stereo output), 3 = gl (stereo made by a wrapper),
+      4 = stereogl (OpenGL quad-buffer stereo). For video: 1 = legacy
+      (frame-compatible broadcast and web 3D, Blu-ray 3D), 2 = current
+      (MV-HEVC spatial video, VR180). For scientific: 1 = vr (work VR:
+      surgery and medical training, design review, industrial training).
+      Other values are reserved.
+    </description>
+    <arg name="class" type="uint" enum="content_class" summary="kind of the content"/>
+    <arg name="subclass" type="uint" summary="sub-class inside the class, 0 = unspecified"/>
+  </request>
 </interface>
 
 </protocol>
