@@ -15,10 +15,9 @@
     eye with that eye's view. The global being present announces
     support.
 
-    Warning! The protocol described in this file is a desktop environment
-    implementation detail. Regular clients must not use this protocol.
-    Backward incompatible changes may be added without bumping the major
-    version of the extension.
+    Clients may use this protocol to declare stereo content. The version 1
+    wire values are stable; future requests must use a new interface version.
+    Destroying the manager does not affect declarations it created.
   </description>
 
   <request name="destroy" type="destructor">
@@ -53,7 +52,8 @@
 
   <request name="destroy" type="destructor">
     <description summary="Remove the declaration">
-      The surface's picture is ordinary again.
+      Resets layout, class and sub-class to zero on the next wl_surface
+      commit. The surface may receive a new declaration immediately.
     </description>
   </request>
 
@@ -77,8 +77,9 @@
 
   <request name="set_content">
     <description summary="Declare the surface's stereo content">
-      Takes effect with the next commit of the surface. Declaring none
-      has the same effect as destroying the object.
+      Takes effect with the next commit of the surface. Unknown values
+      are treated as none. Declaring none clears the layout but retains
+      the class and sub-class and does not destroy the declaration object.
     </description>
     <arg name="content" type="uint" enum="content" summary="packing and eye order"/>
   </request>
@@ -108,7 +109,9 @@
       (frame-compatible broadcast and web 3D, Blu-ray 3D), 2 = current
       (MV-HEVC spatial video, VR180). For scientific: 1 = vr (work VR:
       surgery and medical training, design review, industrial training).
-      Other values are reserved.
+      Other values are reserved. Class and sub-class must each fit in
+      eight bits; otherwise invalid_class is raised. Unknown values within
+      that range are retained for future extensions.
     </description>
     <arg name="content_class" type="uint" enum="content_class" summary="kind of the content"/>
     <arg name="subclass" type="uint" summary="sub-class inside the class, 0 = unspecified"/>
