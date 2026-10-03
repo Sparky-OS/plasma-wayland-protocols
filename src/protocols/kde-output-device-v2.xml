@@ -290,6 +290,7 @@
              summary="if this outputdevice supports the abm level setting"/>
       <entry name="disable" value="0x20000" since="25"
              summary="if this outputdevice supports being enabled/disabled"/>
+      <entry name="virtual_stereo" value="0x40000" since="24" summary="virtual stereo mode toggles are supported"/>
     </enum>
 
     <event name="capabilities">
