@@ -108,7 +108,8 @@
       4 = stereogl (OpenGL quad-buffer stereo). For video: 1 = legacy
       (frame-compatible broadcast and web 3D, Blu-ray 3D), 2 = current
       (MV-HEVC spatial video, VR180). For scientific: 1 = vr (work VR:
-      surgery and medical training, design review, industrial training).
+      surgery and medical training, design review, industrial training),
+      2 = stereogl (OpenGL quad-buffer stereo, as scientific viewers use).
       Other values are reserved. Class and sub-class must each fit in
       eight bits; otherwise invalid_class is raised. Unknown values within
       that range are retained for future extensions.
