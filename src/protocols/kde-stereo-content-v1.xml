@@ -46,6 +46,11 @@
     kde_stereo_content_manager_v1.create.
   </description>
 
+  <enum name="error">
+    <entry name="no_surface" value="0" summary="the surface no longer exists"/>
+    <entry name="invalid_class" value="1" summary="class or sub-class out of range (both are 8-bit values)"/>
+  </enum>
+
   <request name="destroy" type="destructor">
     <description summary="Remove the declaration">
       The surface's picture is ordinary again.
