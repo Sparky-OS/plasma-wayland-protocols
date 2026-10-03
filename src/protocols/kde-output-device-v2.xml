@@ -571,6 +571,17 @@
       </description>
       <arg name="level" type="uint" summary="0 is off, 4 is the maximum level"/>
     </event>
+    <event name="stereo_formats" since="24">
+      <description summary="virtual stereo mode visibility">
+        Two booleans, initially zero. Anaglyph exposes modern-screen and CRT
+        anaglyph twins of 2D modes. Other formats exposes half side by side,
+        half top and bottom, and native-resolution rows, columns and checkerboard
+        in both eye orders. Enabling does not select a mode. HDMI 3D modes remain
+        visible independently. Values and the resulting mode list are atomic at done.
+      </description>
+      <arg name="anaglyph" type="uint" summary="0 disabled, 1 enabled"/>
+      <arg name="other_stereo_formats" type="uint" summary="0 disabled, 1 enabled"/>
+    </event>
   </interface>
 
   <interface name="kde_output_device_mode_v2" version="26">
@@ -629,15 +640,29 @@
       <entry name="stereo_top_and_bottom" value="0x8" summary="HDMI 1.4 3D, top and bottom"/>
       <entry name="stereo_frame_packing" value="0x10" summary="HDMI 1.4 3D, frame packing"/>
       <entry name="stereo_side_by_side_full" value="0x20" summary="HDMI 1.4 3D, side by side (full)"/>
+      <entry name="stereo_anaglyph_modern" value="0x40" since="24"/>
+      <entry name="stereo_anaglyph_crt" value="0x80" since="24"/>
+      <entry name="stereo_rows_left_first" value="0x100" since="24"/>
+      <entry name="stereo_rows_right_first" value="0x200" since="24"/>
+      <entry name="stereo_columns_left_first" value="0x400" since="24"/>
+      <entry name="stereo_columns_right_first" value="0x800" since="24"/>
+      <entry name="stereo_checkerboard_left_first" value="0x1000" since="24"/>
+      <entry name="stereo_checkerboard_right_first" value="0x2000" since="24"/>
+      <entry name="virtual_stereo" value="0x4000" since="24"/>
+
     </enum>
 
     <event name="flags" since="19">
       <description summary="mode flags">
         This event describes the mode's flags.
 
-        A mode with one of the stereo flags is an HDMI 1.4 3D mode: it repeats a 2D mode's
-        size and refresh rate, and setting it turns the display's 3D on, with the output's
-        content drawn into both eyes. Clients should never choose such a mode on their own.
+        Stereo modes must never be chosen automatically. Without virtual_stereo,
+        the packing flags describe HDMI 1.4 3D signalling. With virtual_stereo,
+        the mode keeps its 2D parent's timing and link, without a 3D InfoFrame.
+        Exactly one packing or anaglyph/pattern flag accompanies virtual_stereo.
+        The first pixel means the output's top-left device pixel. Left-first
+        selects the left eye on even rows, columns, or x+y parity respectively.
+        Right-first reverses this order. Virtual modes are never preferred.
       </description>
       <arg name="flags" type="uint" enum="flags"/>
     </event>

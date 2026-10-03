@@ -456,6 +456,18 @@
     <arg name="outputdevice" type="object" interface="kde_output_device_v2" summary="outputdevice this setting applies to"/>
     <arg name="level" type="uint" summary="0 is off, 4 is the maximum level"/>
   </request>
+  <request name="set_stereo_formats" since="22">
+    <description summary="show virtual stereo modes">
+      Set the two per-output visibility booleans. Values other than 0 and 1
+      fail the configuration. Enabling does not select a mode; clients apply
+      this configuration before selecting a newly announced mode. Disabling
+      the group of the current virtual mode restores its underlying 2D mode.
+      A failed configuration changes neither switches nor mode selection.
+    </description>
+    <arg name="outputdevice" type="object" interface="kde_output_device_v2"/>
+    <arg name="anaglyph" type="uint"/>
+    <arg name="other_stereo_formats" type="uint"/>
+  </request>
 </interface>
 
 <interface name="kde_mode_list_v2" version="22">
