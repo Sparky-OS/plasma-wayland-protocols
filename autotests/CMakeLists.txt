@@ -1,6 +1,9 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # SPDX-FileCopyrightText: 2024 David Redondo <kde@david-redondo.de>
 
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+add_test(NAME virtual-stereo-contract COMMAND Python3::Interpreter ${PROJECT_SOURCE_DIR}/tests/virtual-stereo-contract.py)
+
 file(GLOB PROTOCOLS CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/src/protocols/*.xml)
 
 foreach(PROTOCOL IN LISTS PROTOCOLS)
