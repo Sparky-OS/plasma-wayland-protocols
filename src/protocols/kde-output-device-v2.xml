@@ -288,6 +288,7 @@
              summary="if this outputdevice supports HDR ICC profiles"/>
       <entry name="abm_level" value="0x10000" since="23"
              summary="if this outputdevice supports the abm level setting"/>
+      <entry name="virtual_stereo" value="0x20000" since="24" summary="virtual stereo mode toggles are supported"/>
     </enum>
 
     <event name="capabilities">

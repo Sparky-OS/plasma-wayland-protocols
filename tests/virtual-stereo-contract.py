@@ -12,6 +12,9 @@ class VirtualStereoContract(unittest.TestCase):
         protocol = ET.parse(ROOT / 'kde-output-device-v2.xml')
         for name in ('kde_output_device_registry_v2', 'kde_output_device_v2', 'kde_output_device_mode_v2'):
             self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '24')
+        capability = protocol.find("interface[@name='kde_output_device_v2']/enum[@name='capability']/entry[@name='virtual_stereo']")
+        self.assertEqual(int(capability.get('value'), 0), 0x20000)
+        self.assertEqual(capability.get('since'), '24')
         event = protocol.find("interface[@name='kde_output_device_v2']/event[@name='stereo_formats']")
         self.assertEqual(event.get('since'), '24')
         self.assertEqual([(a.get('name'), a.get('type')) for a in event.findall('arg')], [('anaglyph', 'uint'), ('other_stereo_formats', 'uint')])
