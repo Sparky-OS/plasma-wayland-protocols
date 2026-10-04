@@ -583,6 +583,38 @@
       <arg name="anaglyph" type="uint" summary="0 disabled, 1 enabled"/>
       <arg name="other_stereo_formats" type="uint" summary="0 disabled, 1 enabled"/>
     </event>
+
+    <enum name="stereo_pair_mode" since="24">
+      <entry name="none" value="0" summary="the output is not paired"/>
+      <entry name="dual_projection" value="1" summary="a passive dual-projection pair"/>
+      <entry name="mirror_rig" value="2" summary="a mirror rig pair"/>
+      <entry name="ized3d" value="3" summary="an iZ3D dual-panel pair"/>
+    </enum>
+
+    <enum name="stereo_pair_role" since="24">
+      <entry name="left" value="0" summary="left eye output"/>
+      <entry name="right" value="1" summary="right eye output"/>
+      <entry name="back" value="2" summary="back panel input"/>
+      <entry name="front" value="3" summary="front panel input"/>
+    </enum>
+
+    <enum name="stereo_pair_reflection" since="24">
+      <entry name="none" value="0" summary="no additional reflection"/>
+      <entry name="horizontal" value="1" summary="reflect horizontally"/>
+      <entry name="vertical" value="2" summary="reflect vertically"/>
+    </enum>
+
+    <event name="stereo_pair" since="24">
+      <description summary="paired stereo output">
+        Describes the other output in a two-output stereo pair. The partner is
+        identified by its persistent uuid. An empty uuid and the none mode mean
+        that this output is not paired.
+      </description>
+      <arg name="partner" type="string" summary="partner output uuid, or empty when unpaired"/>
+      <arg name="mode" type="uint" enum="stereo_pair_mode"/>
+      <arg name="role" type="uint" enum="stereo_pair_role"/>
+      <arg name="reflection" type="uint" enum="stereo_pair_reflection"/>
+    </event>
   </interface>
 
   <interface name="kde_output_device_mode_v2" version="26">
@@ -650,6 +682,8 @@
       <entry name="stereo_checkerboard_left_first" value="0x1000" since="24"/>
       <entry name="stereo_checkerboard_right_first" value="0x2000" since="24"/>
       <entry name="virtual_stereo" value="0x4000" since="24"/>
+      <entry name="stereo_sequential_left_first" value="0x40000" since="24"/>
+      <entry name="stereo_sequential_right_first" value="0x80000" since="24"/>
 
     </enum>
 
