@@ -41,7 +41,7 @@ add_custom_command(OUTPUT ${SCREENCAST_CODE}
     DEPENDS ${SCREENCAST_XML})
 target_sources(screencast-properties PRIVATE ${SCREENCAST_CODE})
 target_include_directories(screencast-properties PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-target_link_libraries(screencast-properties PRIVATE Wayland::Client Wayland::Server Threads::Threads)
+target_link_libraries(screencast-properties PRIVATE Wayland::Client Wayland::Server Threads::Threads m)
 target_compile_options(screencast-properties PRIVATE -UNDEBUG)
 add_test(NAME screencast-properties COMMAND screencast-properties)
 set_tests_properties(screencast-properties PROPERTIES TIMEOUT 10)
