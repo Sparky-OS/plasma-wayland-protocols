@@ -11,7 +11,7 @@
     SPDX-License-Identifier: MIT-CMU
     ]]></copyright>
 
-<interface name="kde_output_management_v2" version="24">
+<interface name="kde_output_management_v2" version="27">
   <description summary="configuration of server outputs through clients">
     This interface enables clients to set properties of output devices for screen
     configuration purposes via the server. To this end output devices are referenced
@@ -74,7 +74,7 @@
 
 </interface>
 
-<interface name="kde_output_configuration_v2" version="24">
+<interface name="kde_output_configuration_v2" version="27">
   <description summary="configure single output devices">
     outputconfiguration is a client-specific resource that can be used to ask
     the server to apply changes to available output devices.
@@ -456,7 +456,7 @@
     <arg name="outputdevice" type="object" interface="kde_output_device_v2" summary="outputdevice this setting applies to"/>
     <arg name="level" type="uint" summary="0 is off, 4 is the maximum level"/>
   </request>
-  <request name="set_stereo_formats" since="24">
+  <request name="set_stereo_formats" since="27">
     <description summary="show virtual stereo modes">
       Set the two per-output visibility booleans. Values other than 0 and 1
       fail the configuration. Enabling does not select a mode; clients apply
@@ -469,27 +469,27 @@
     <arg name="other_stereo_formats" type="uint"/>
   </request>
 
-  <enum name="stereo_pair_mode" since="24">
+  <enum name="stereo_pair_mode" since="27">
     <entry name="none" value="0"/>
     <entry name="dual_projection" value="1"/>
     <entry name="mirror_rig" value="2"/>
     <entry name="ized3d" value="3"/>
   </enum>
 
-  <enum name="stereo_pair_role" since="24">
+  <enum name="stereo_pair_role" since="27">
     <entry name="left" value="0"/>
     <entry name="right" value="1"/>
     <entry name="back" value="2"/>
     <entry name="front" value="3"/>
   </enum>
 
-  <enum name="stereo_pair_reflection" since="24">
+  <enum name="stereo_pair_reflection" since="27">
     <entry name="none" value="0"/>
     <entry name="horizontal" value="1"/>
     <entry name="vertical" value="2"/>
   </enum>
 
-  <request name="set_stereo_pair" since="24">
+  <request name="set_stereo_pair" since="27">
     <description summary="pair two outputs for stereo">
       Set or clear the two-output stereo pair for an output. The partner may be
       null to clear the pair. The same pair must be described reciprocally.

@@ -11,12 +11,14 @@ class VirtualStereoContract(unittest.TestCase):
     def test_device(self):
         protocol = ET.parse(ROOT / 'kde-output-device-v2.xml')
         for name in ('kde_output_device_registry_v2', 'kde_output_device_v2', 'kde_output_device_mode_v2'):
-            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '24')
+            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '27')
         capability = protocol.find("interface[@name='kde_output_device_v2']/enum[@name='capability']/entry[@name='virtual_stereo']")
         self.assertEqual(int(capability.get('value'), 0), 0x40000)
-        self.assertEqual(capability.get('since'), '24')
+        self.assertEqual(capability.get('since'), '27')
+        capabilities = [int(entry.get('value'), 0) for entry in protocol.findall("interface[@name='kde_output_device_v2']/enum[@name='capability']/entry")]
+        self.assertEqual(len(capabilities), len(set(capabilities)))
         event = protocol.find("interface[@name='kde_output_device_v2']/event[@name='stereo_formats']")
-        self.assertEqual(event.get('since'), '24')
+        self.assertEqual(event.get('since'), '27')
         self.assertEqual([(a.get('name'), a.get('type')) for a in event.findall('arg')], [('anaglyph', 'uint'), ('other_stereo_formats', 'uint')])
         entries = protocol.findall("interface[@name='kde_output_device_mode_v2']/enum[@name='flags']/entry")
         values = {entry.get('name'): int(entry.get('value'), 0) for entry in entries}
@@ -31,21 +33,21 @@ class VirtualStereoContract(unittest.TestCase):
                     'stereo_sequential_right_first': 524288}
         self.assertEqual(values, expected)
         pair_event = protocol.find("interface[@name='kde_output_device_v2']/event[@name='stereo_pair']")
-        self.assertEqual(pair_event.get('since'), '24')
+        self.assertEqual(pair_event.get('since'), '27')
         self.assertEqual([(a.get('name'), a.get('type')) for a in pair_event.findall('arg')],
                          [('partner', 'string'), ('mode', 'uint'), ('role', 'uint'), ('reflection', 'uint')])
 
     def test_management(self):
         protocol = ET.parse(ROOT / 'kde-output-management-v2.xml')
         for name in ('kde_output_management_v2', 'kde_output_configuration_v2'):
-            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '24')
+            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '27')
         request = protocol.find("interface[@name='kde_output_configuration_v2']/request[@name='set_stereo_formats']")
-        self.assertEqual(request.get('since'), '24')
+        self.assertEqual(request.get('since'), '27')
         self.assertEqual([(a.get('name'), a.get('type')) for a in request.findall('arg')],
                          [('outputdevice', 'object'), ('anaglyph', 'uint'), ('other_stereo_formats', 'uint')])
         self.assertEqual(request.find('arg').get('interface'), 'kde_output_device_v2')
         pair = protocol.find("interface[@name='kde_output_configuration_v2']/request[@name='set_stereo_pair']")
-        self.assertEqual(pair.get('since'), '24')
+        self.assertEqual(pair.get('since'), '27')
         self.assertEqual([(a.get('name'), a.get('type')) for a in pair.findall('arg')],
                          [('outputdevice', 'object'), ('partner', 'object'), ('mode', 'uint'), ('role', 'uint'), ('reflection', 'uint')])
         self.assertEqual(pair.find("arg[@name='partner']").get('allow-null'), 'true')

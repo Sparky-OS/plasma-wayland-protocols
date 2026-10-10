@@ -10,7 +10,7 @@
     SPDX-License-Identifier: MIT-CMU
     ]]></copyright>
 
-  <interface name="kde_output_device_registry_v2" version="26">
+  <interface name="kde_output_device_registry_v2" version="27">
     <description summary="output devices">
       This interface can be used to list output devices.
 
@@ -52,7 +52,7 @@
     </event>
   </interface>
 
-  <interface name="kde_output_device_v2" version="26">
+  <interface name="kde_output_device_v2" version="27">
     <description summary="output configuration representation">
       An output device describes a display device available to the compositor.
       output_device is similar to wl_output, but focuses on output
@@ -290,7 +290,7 @@
              summary="if this outputdevice supports the abm level setting"/>
       <entry name="disable" value="0x20000" since="25"
              summary="if this outputdevice supports being enabled/disabled"/>
-      <entry name="virtual_stereo" value="0x40000" since="24" summary="virtual stereo mode toggles are supported"/>
+      <entry name="virtual_stereo" value="0x40000" since="27" summary="virtual stereo mode toggles are supported"/>
     </enum>
 
     <event name="capabilities">
@@ -572,7 +572,7 @@
       </description>
       <arg name="level" type="uint" summary="0 is off, 4 is the maximum level"/>
     </event>
-    <event name="stereo_formats" since="24">
+    <event name="stereo_formats" since="27">
       <description summary="virtual stereo mode visibility">
         Two booleans, initially zero. Anaglyph exposes modern-screen and CRT
         anaglyph twins of 2D modes. Other formats exposes half side by side,
@@ -584,27 +584,27 @@
       <arg name="other_stereo_formats" type="uint" summary="0 disabled, 1 enabled"/>
     </event>
 
-    <enum name="stereo_pair_mode" since="24">
+    <enum name="stereo_pair_mode" since="27">
       <entry name="none" value="0" summary="the output is not paired"/>
       <entry name="dual_projection" value="1" summary="a passive dual-projection pair"/>
       <entry name="mirror_rig" value="2" summary="a mirror rig pair"/>
       <entry name="ized3d" value="3" summary="an iZ3D dual-panel pair"/>
     </enum>
 
-    <enum name="stereo_pair_role" since="24">
+    <enum name="stereo_pair_role" since="27">
       <entry name="left" value="0" summary="left eye output"/>
       <entry name="right" value="1" summary="right eye output"/>
       <entry name="back" value="2" summary="back panel input"/>
       <entry name="front" value="3" summary="front panel input"/>
     </enum>
 
-    <enum name="stereo_pair_reflection" since="24">
+    <enum name="stereo_pair_reflection" since="27">
       <entry name="none" value="0" summary="no additional reflection"/>
       <entry name="horizontal" value="1" summary="reflect horizontally"/>
       <entry name="vertical" value="2" summary="reflect vertically"/>
     </enum>
 
-    <event name="stereo_pair" since="24">
+    <event name="stereo_pair" since="27">
       <description summary="paired stereo output">
         Describes the other output in a two-output stereo pair. The partner is
         identified by its persistent uuid. An empty uuid and the none mode mean
@@ -617,7 +617,7 @@
     </event>
   </interface>
 
-  <interface name="kde_output_device_mode_v2" version="26">
+  <interface name="kde_output_device_mode_v2" version="27">
     <description summary="output mode">
       This object describes an output mode.
 
@@ -673,17 +673,17 @@
       <entry name="stereo_top_and_bottom" value="0x8" summary="HDMI 1.4 3D, top and bottom"/>
       <entry name="stereo_frame_packing" value="0x10" summary="HDMI 1.4 3D, frame packing"/>
       <entry name="stereo_side_by_side_full" value="0x20" summary="HDMI 1.4 3D, side by side (full)"/>
-      <entry name="stereo_anaglyph_modern" value="0x40" since="24"/>
-      <entry name="stereo_anaglyph_crt" value="0x80" since="24"/>
-      <entry name="stereo_rows_left_first" value="0x100" since="24"/>
-      <entry name="stereo_rows_right_first" value="0x200" since="24"/>
-      <entry name="stereo_columns_left_first" value="0x400" since="24"/>
-      <entry name="stereo_columns_right_first" value="0x800" since="24"/>
-      <entry name="stereo_checkerboard_left_first" value="0x1000" since="24"/>
-      <entry name="stereo_checkerboard_right_first" value="0x2000" since="24"/>
-      <entry name="virtual_stereo" value="0x4000" since="24"/>
-      <entry name="stereo_sequential_left_first" value="0x40000" since="24"/>
-      <entry name="stereo_sequential_right_first" value="0x80000" since="24"/>
+      <entry name="stereo_anaglyph_modern" value="0x40" since="27"/>
+      <entry name="stereo_anaglyph_crt" value="0x80" since="27"/>
+      <entry name="stereo_rows_left_first" value="0x100" since="27"/>
+      <entry name="stereo_rows_right_first" value="0x200" since="27"/>
+      <entry name="stereo_columns_left_first" value="0x400" since="27"/>
+      <entry name="stereo_columns_right_first" value="0x800" since="27"/>
+      <entry name="stereo_checkerboard_left_first" value="0x1000" since="27"/>
+      <entry name="stereo_checkerboard_right_first" value="0x2000" since="27"/>
+      <entry name="virtual_stereo" value="0x4000" since="27"/>
+      <entry name="stereo_sequential_left_first" value="0x40000" since="27"/>
+      <entry name="stereo_sequential_right_first" value="0x80000" since="27"/>
 
     </enum>
 
