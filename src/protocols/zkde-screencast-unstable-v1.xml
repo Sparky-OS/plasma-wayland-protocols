@@ -5,7 +5,7 @@
 
     SPDX-License-Identifier: LGPL-2.1-or-later
   ]]></copyright>
-    <interface name="zkde_screencast_unstable_v1" version="6">
+    <interface name="zkde_screencast_unstable_v1" version="7">
         <description summary="Protocol for managing PipeWire feeds of the different displays and windows">
             Warning! The protocol described in this file is a desktop environment
             implementation detail. Regular clients must not use this protocol.
@@ -74,9 +74,55 @@
             <arg name="scale" type="fixed" summary="Scaling factor of the display where it's to be displayed"/>
             <arg name="pointer" type="uint" summary="Requested pointer mode"/>
         </request>
+
+        <request name="stream_virtual_output_with_properties" since="7">
+            <description summary="create a virtual display with explicit panel properties">
+                The name is a persistent, nonempty identifier for the receiving
+                device, independent of its address and transport. The description
+                is its user-visible name. Width and height are panel pixels,
+                independent of scale. Refresh is in millihertz. Physical width and
+                height are millimetres; both are zero when unknown.
+
+                Headset is zero for an ordinary monitor or one for a left-first
+                split-eye display. A headset has an even panel width. Each eye
+                uses half the panel width and the full panel height, with no
+                intermediate full-width eye image. The stream contains the two
+                eye viewports side by side at exactly the panel size. Scale is
+                the UI scale of each viewport, not a multiplier of panel pixels.
+
+                A headset request explicitly selects the virtual side-by-side
+                mode on first use. This is not automatic stereo mode selection
+                merely because an output advertises stereo capability. Compatible
+                saved placement and UI scale may be restored on subsequent use.
+                An explicit later output-configuration request from the user may
+                change the mode; the creation request does not restrict it.
+                Identity, initial mode, refresh and viewports must be established
+                before the output is announced. Lens distortion is the receiver's
+                responsibility and is not applied to this stream.
+
+                Invalid or unsupported properties fail the stream and create no
+                output. The compositor must not silently substitute a mono view,
+                a different pixel size or a different refresh. Width, height,
+                refresh and scale must be positive; headset must be zero or one.
+                A client requiring these properties must not fall back to an
+                older request when version 7 is unavailable. Closing the stream
+                removes the output, as for the other virtual-output requests.
+            </description>
+            <arg name="stream" type="new_id" interface="zkde_screencast_stream_unstable_v1"/>
+            <arg name="name" type="string" summary="persistent device identifier"/>
+            <arg name="description" type="string" summary="user-visible device name"/>
+            <arg name="width" type="int" summary="physical panel width in pixels"/>
+            <arg name="height" type="int" summary="physical panel height in pixels"/>
+            <arg name="refresh" type="uint" summary="panel refresh in millihertz"/>
+            <arg name="scale" type="fixed" summary="UI scale per viewport"/>
+            <arg name="physical_width" type="uint" summary="panel width in millimetres or zero"/>
+            <arg name="physical_height" type="uint" summary="panel height in millimetres or zero"/>
+            <arg name="headset" type="uint" summary="zero for ordinary display, one for split-eye display"/>
+            <arg name="pointer" type="uint" enum="pointer" summary="requested pointer mode"/>
+        </request>
     </interface>
 
-    <interface name="zkde_screencast_stream_unstable_v1" version="6">
+    <interface name="zkde_screencast_stream_unstable_v1" version="7">
         <request name="close" type="destructor">
             <description summary="Indicates we are done with the stream and the communication is over."/>
         </request>
