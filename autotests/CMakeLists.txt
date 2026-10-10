@@ -45,3 +45,23 @@ target_link_libraries(screencast-properties PRIVATE Wayland::Client Wayland::Ser
 target_compile_options(screencast-properties PRIVATE -UNDEBUG)
 add_test(NAME screencast-properties COMMAND screencast-properties)
 set_tests_properties(screencast-properties PROPERTIES TIMEOUT 10)
+
+add_executable(output-viewport ../tests/output-viewport.c)
+set(OUTPUT_XML ${PROJECT_SOURCE_DIR}/src/protocols/kde-output-device-v2.xml)
+foreach(KIND client server)
+    set(HEADER ${CMAKE_CURRENT_BINARY_DIR}/kde-output-device-v2-${KIND}-protocol.h)
+    add_custom_command(OUTPUT ${HEADER}
+        COMMAND Wayland::Scanner --strict ${KIND}-header ${OUTPUT_XML} ${HEADER}
+        DEPENDS ${OUTPUT_XML})
+    target_sources(output-viewport PRIVATE ${HEADER})
+endforeach()
+set(OUTPUT_CODE ${CMAKE_CURRENT_BINARY_DIR}/kde-output-device-v2-wire.c)
+add_custom_command(OUTPUT ${OUTPUT_CODE}
+    COMMAND Wayland::Scanner --strict private-code ${OUTPUT_XML} ${OUTPUT_CODE}
+    DEPENDS ${OUTPUT_XML})
+target_sources(output-viewport PRIVATE ${OUTPUT_CODE})
+target_include_directories(output-viewport PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_link_libraries(output-viewport PRIVATE Wayland::Client Wayland::Server Threads::Threads)
+target_compile_options(output-viewport PRIVATE -UNDEBUG)
+add_test(NAME output-viewport COMMAND output-viewport)
+set_tests_properties(output-viewport PROPERTIES TIMEOUT 10)

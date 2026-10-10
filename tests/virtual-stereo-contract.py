@@ -17,7 +17,7 @@ class VirtualStereoContract(unittest.TestCase):
     def test_device(self):
         protocol = ET.parse(ROOT / 'kde-output-device-v2.xml')
         for name in ('kde_output_device_registry_v2', 'kde_output_device_v2', 'kde_output_device_mode_v2'):
-            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '24')
+            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '25')
         capability = protocol.find("interface[@name='kde_output_device_v2']/enum[@name='capability']/entry[@name='virtual_stereo']")
         self.assertEqual(int(capability.get('value'), 0), 0x20000)
         self.assertEqual(capability.get('since'), '24')
@@ -40,6 +40,13 @@ class VirtualStereoContract(unittest.TestCase):
         self.assertEqual(pair_event.get('since'), '24')
         self.assertEqual([(a.get('name'), a.get('type')) for a in pair_event.findall('arg')],
                          [('partner', 'string'), ('mode', 'uint'), ('role', 'uint'), ('reflection', 'uint')])
+
+    def test_native_viewport(self):
+        protocol = ET.parse(ROOT / 'kde-output-device-v2.xml')
+        event = protocol.find("interface[@name='kde_output_device_mode_v2']/event[@name='view_size']")
+        self.assertEqual(event.get('since'), '25')
+        self.assertEqual([(a.get('name'), a.get('type')) for a in event.findall('arg')],
+                         [('width', 'int'), ('height', 'int')])
 
     def test_management(self):
         protocol = ET.parse(ROOT / 'kde-output-management-v2.xml')
