@@ -30,7 +30,7 @@ class VirtualStereoContract(unittest.TestCase):
         values = {entry.get('name'): int(entry.get('value'), 0) for entry in entries}
         expected = {'custom': 1, 'reduced_blanking': 2, 'stereo_side_by_side_half': 4,
                     'stereo_top_and_bottom': 8, 'stereo_frame_packing': 16, 'stereo_side_by_side_full': 32,
-                    'stereo_anaglyph_modern': 64, 'stereo_anaglyph_crt': 128,
+                    'stereo_anaglyph_modern': 64, 'stereo_anaglyph_crt': 128, 'stereo_anaglyph_red_blue': 32768,
                     'stereo_rows_left_first': 256, 'stereo_rows_right_first': 512,
                     'stereo_columns_left_first': 1024, 'stereo_columns_right_first': 2048,
                     'stereo_checkerboard_left_first': 4096, 'stereo_checkerboard_right_first': 8192,
