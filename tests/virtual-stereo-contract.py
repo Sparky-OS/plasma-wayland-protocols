@@ -8,6 +8,12 @@ ROOT = pathlib.Path(__file__).resolve().parents[1] / 'src' / 'protocols'
 
 
 class VirtualStereoContract(unittest.TestCase):
+    def test_content(self):
+        protocol = ET.parse(ROOT / 'kde-stereo-content-v1.xml')
+        content = protocol.find(".//enum[@name='content']")
+        self.assertEqual([(entry.get('name'), int(entry.get('value'))) for entry in content.findall('entry')],
+                         [('none', 0), ('side_by_side_full', 3)])
+
     def test_device(self):
         protocol = ET.parse(ROOT / 'kde-output-device-v2.xml')
         for name in ('kde_output_device_registry_v2', 'kde_output_device_v2', 'kde_output_device_mode_v2'):
