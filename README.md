@@ -6,7 +6,8 @@
 ## Sparky Stereo OS
 
 This is the stereo version of Plasma Wayland Protocols by Sparky Stereo OS, forked from [KDE/plasma-wayland-protocols](https://github.com/KDE/plasma-wayland-protocols).
-It adds protocols for stereo outputs and for surfaces that declare stereo content, and a small C library with which X11 and Wayland programs make that declaration.
+It adds protocols for stereo outputs and for surfaces that declare stereo content.
+The C library with which X11 and Wayland programs make that declaration, libstereo-declare, has its own repository: [Sparky-OS/libstereo-declare](https://github.com/Sparky-OS/libstereo-declare), with its history.
 
 Where it comes from:
 
