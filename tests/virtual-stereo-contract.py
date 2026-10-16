@@ -17,7 +17,7 @@ class VirtualStereoContract(unittest.TestCase):
     def test_device(self):
         protocol = ET.parse(ROOT / 'kde-output-device-v2.xml')
         for name in ('kde_output_device_registry_v2', 'kde_output_device_v2', 'kde_output_device_mode_v2'):
-            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '25')
+            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '27')
         capability = protocol.find("interface[@name='kde_output_device_v2']/enum[@name='capability']/entry[@name='virtual_stereo']")
         self.assertEqual(int(capability.get('value'), 0), 0x20000)
         self.assertEqual(capability.get('since'), '24')
@@ -41,6 +41,27 @@ class VirtualStereoContract(unittest.TestCase):
         self.assertEqual([(a.get('name'), a.get('type')) for a in pair_event.findall('arg')],
                          [('partner', 'string'), ('mode', 'uint'), ('role', 'uint'), ('reflection', 'uint')])
 
+    def test_swap_eyes_and_ized3d(self):
+        device = ET.parse(ROOT / 'kde-output-device-v2.xml')
+        capabilities = {entry.get('name'): (int(entry.get('value'), 0), entry.get('since'))
+                        for entry in device.findall("interface[@name='kde_output_device_v2']/enum[@name='capability']/entry")}
+        self.assertEqual(capabilities['stereo_swap_eyes'], (0x40000, '26'))
+        self.assertEqual(capabilities['ized3d_options'], (0x80000, '27'))
+        swap = device.find("interface[@name='kde_output_device_v2']/event[@name='stereo_swap_eyes']")
+        self.assertEqual(swap.get('since'), '26')
+        self.assertEqual([(a.get('name'), a.get('type')) for a in swap.findall('arg')], [('enabled', 'uint')])
+        options = device.find("interface[@name='kde_output_device_v2']/event[@name='ized3d_options']")
+        self.assertEqual(options.get('since'), '27')
+        self.assertEqual([(a.get('name'), a.get('type')) for a in options.findall('arg')], [('mode', 'uint'), ('transfer', 'uint')])
+        management = ET.parse(ROOT / 'kde-output-management-v2.xml')
+        swap = management.find("interface[@name='kde_output_configuration_v2']/request[@name='set_stereo_swap_eyes']")
+        self.assertEqual(swap.get('since'), '26')
+        self.assertEqual([(a.get('name'), a.get('type')) for a in swap.findall('arg')], [('outputdevice', 'object'), ('enabled', 'uint')])
+        options = management.find("interface[@name='kde_output_configuration_v2']/request[@name='set_ized3d_options']")
+        self.assertEqual(options.get('since'), '27')
+        self.assertEqual([(a.get('name'), a.get('type')) for a in options.findall('arg')],
+                         [('outputdevice', 'object'), ('mode', 'uint'), ('transfer', 'uint')])
+
     def test_native_viewport(self):
         protocol = ET.parse(ROOT / 'kde-output-device-v2.xml')
         event = protocol.find("interface[@name='kde_output_device_mode_v2']/event[@name='view_size']")
@@ -51,7 +72,7 @@ class VirtualStereoContract(unittest.TestCase):
     def test_management(self):
         protocol = ET.parse(ROOT / 'kde-output-management-v2.xml')
         for name in ('kde_output_management_v2', 'kde_output_configuration_v2'):
-            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '24')
+            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '27')
         request = protocol.find("interface[@name='kde_output_configuration_v2']/request[@name='set_stereo_formats']")
         self.assertEqual(request.get('since'), '24')
         self.assertEqual([(a.get('name'), a.get('type')) for a in request.findall('arg')],
