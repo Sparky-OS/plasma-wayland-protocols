@@ -9,9 +9,9 @@
 <interface name="kde_stereo_content_manager_v1" version="2">
   <description summary="declare stereo content of surfaces">
     A program tells the compositor that a surface's picture holds two
-    views, one per eye, packed full side by side, with the left eye
-    first. The compositor renders the declared surface once per eye
-    with that eye's view. The global being present announces support.
+    views, one per eye, packed full side by side, with the left eye first.
+    The compositor renders the declared surface once per eye with that
+    eye's view. The global being present announces support.
 
     Clients may use this protocol to declare stereo content. The version 1
     wire values are stable; future requests must use a new interface version.
@@ -65,7 +65,7 @@
 
   <enum name="content">
     <description summary="full side-by-side packing of the two views">
-      The values match the X11 property _KDE_NET_WM_STEREO_CONTENT.
+      The value matches the X11 property _KDE_NET_WM_STEREO_CONTENT.
     </description>
     <entry name="none" value="0" summary="no stereo content"/>
     <entry name="side_by_side_full" value="3" summary="side by side, full width per eye, left first"/>
