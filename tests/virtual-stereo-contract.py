@@ -14,6 +14,29 @@ class VirtualStereoContract(unittest.TestCase):
         self.assertEqual([(entry.get('name'), int(entry.get('value'))) for entry in content.findall('entry')],
                          [('none', 0), ('side_by_side_full', 3)])
 
+    def test_desktop_depth(self):
+        protocol = ET.parse(ROOT / 'kde-stereo-content-v1.xml')
+        manager = protocol.find("interface[@name='kde_stereo_content_manager_v1']")
+        self.assertEqual(manager.get('version'), '3')
+        self.assertEqual(protocol.find("interface[@name='kde_stereo_content_v1']").get('version'), '3')
+        get_depth = manager.find("request[@name='get_depth']")
+        self.assertEqual(get_depth.get('since'), '3')
+        self.assertEqual([(a.get('name'), a.get('type'), a.get('interface')) for a in get_depth.findall('arg')],
+                         [('id', 'new_id', 'kde_stereo_depth_v1'), ('surface', 'object', 'wl_surface')])
+        depth = protocol.find("interface[@name='kde_stereo_depth_v1']")
+        self.assertEqual(depth.get('version'), '3')
+        state = depth.find("event[@name='depth_state']")
+        self.assertEqual([(a.get('name'), a.get('type')) for a in state.findall('arg')], [('awake', 'uint'), ('output_edges', 'uint')])
+        edges = depth.find("enum[@name='edge']")
+        self.assertEqual(edges.get('bitfield'), 'true')
+        self.assertEqual([(e.get('name'), int(e.get('value'))) for e in edges.findall('entry')],
+                         [('left', 1), ('top', 2), ('right', 4), ('bottom', 8)])
+        requests = [(r.get('name'), r.get('type'), [(a.get('name'), a.get('type')) for a in r.findall('arg')]) for r in depth.findall('request')]
+        self.assertEqual(requests, [('destroy', 'destructor', []),
+                                    ('set_desktop_depth', None, [('desktop_depth', 'uint')]),
+                                    ('set_place', None, [('depth', 'fixed')]),
+                                    ('unset_place', None, [])])
+
     def test_device(self):
         protocol = ET.parse(ROOT / 'kde-output-device-v2.xml')
         for name in ('kde_output_device_registry_v2', 'kde_output_device_v2', 'kde_output_device_mode_v2'):
