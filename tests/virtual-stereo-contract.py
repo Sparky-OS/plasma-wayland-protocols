@@ -40,7 +40,7 @@ class VirtualStereoContract(unittest.TestCase):
     def test_device(self):
         protocol = ET.parse(ROOT / 'kde-output-device-v2.xml')
         for name in ('kde_output_device_registry_v2', 'kde_output_device_v2', 'kde_output_device_mode_v2'):
-            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '28')
+            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '29')
         capability = protocol.find("interface[@name='kde_output_device_v2']/enum[@name='capability']/entry[@name='virtual_stereo']")
         self.assertEqual(int(capability.get('value'), 0), 0x20000)
         self.assertEqual(capability.get('since'), '24')
@@ -122,6 +122,21 @@ class VirtualStereoContract(unittest.TestCase):
         self.assertEqual([(a.get('name'), a.get('type')) for a in depth.findall('arg')],
                          [('outputdevice', 'object'), ('source', 'uint'), ('viewing_distance', 'uint')])
 
+    def test_stereo_glasses(self):
+        # version 29: USB-C 3D glasses, whose two-eyes-wide mode comes up in side by side (full)
+        device = ET.parse(ROOT / 'kde-output-device-v2.xml')
+        capabilities = {entry.get('name'): (int(entry.get('value'), 0), entry.get('since'))
+                        for entry in device.findall("interface[@name='kde_output_device_v2']/enum[@name='capability']/entry")}
+        self.assertEqual(capabilities['stereo_glasses'], (0x400000, '29'))
+        glasses = device.find("interface[@name='kde_output_device_v2']/event[@name='stereo_glasses']")
+        self.assertEqual(glasses.get('since'), '29')
+        self.assertEqual([(a.get('name'), a.get('type')) for a in glasses.findall('arg')], [('enabled', 'uint')])
+        management = ET.parse(ROOT / 'kde-output-management-v2.xml')
+        glasses = management.find("interface[@name='kde_output_configuration_v2']/request[@name='set_stereo_glasses']")
+        self.assertEqual(glasses.get('since'), '29')
+        self.assertEqual([(a.get('name'), a.get('type')) for a in glasses.findall('arg')], [('outputdevice', 'object'), ('enabled', 'uint')])
+        self.assertEqual(glasses.find('arg').get('interface'), 'kde_output_device_v2')
+
     def test_native_viewport(self):
         protocol = ET.parse(ROOT / 'kde-output-device-v2.xml')
         event = protocol.find("interface[@name='kde_output_device_mode_v2']/event[@name='view_size']")
@@ -132,7 +147,7 @@ class VirtualStereoContract(unittest.TestCase):
     def test_management(self):
         protocol = ET.parse(ROOT / 'kde-output-management-v2.xml')
         for name in ('kde_output_management_v2', 'kde_output_configuration_v2'):
-            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '28')
+            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '29')
         request = protocol.find("interface[@name='kde_output_configuration_v2']/request[@name='set_stereo_formats']")
         self.assertEqual(request.get('since'), '24')
         self.assertEqual([(a.get('name'), a.get('type')) for a in request.findall('arg')],
