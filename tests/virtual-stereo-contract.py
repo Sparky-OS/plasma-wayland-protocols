@@ -40,7 +40,7 @@ class VirtualStereoContract(unittest.TestCase):
     def test_device(self):
         protocol = ET.parse(ROOT / 'kde-output-device-v2.xml')
         for name in ('kde_output_device_registry_v2', 'kde_output_device_v2', 'kde_output_device_mode_v2'):
-            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '29')
+            self.assertEqual(protocol.find(f"interface[@name='{name}']").get('version'), '30')
         capability = protocol.find("interface[@name='kde_output_device_v2']/enum[@name='capability']/entry[@name='virtual_stereo']")
         self.assertEqual(int(capability.get('value'), 0), 0x20000)
         self.assertEqual(capability.get('since'), '24')
@@ -59,7 +59,8 @@ class VirtualStereoContract(unittest.TestCase):
                     'stereo_sequential_left_first': 262144,
                     'stereo_sequential_right_first': 524288,
                     'stereo_field_alternative': 0x100000, 'stereo_line_alternative': 0x200000,
-                    'stereo_l_depth': 0x400000, 'stereo_l_depth_graphics': 0x800000}
+                    'stereo_l_depth': 0x400000, 'stereo_l_depth_graphics': 0x800000,
+                    'stereo_sequential_displayport': 0x1000000}
         self.assertEqual(values, expected)
         pair_event = protocol.find("interface[@name='kde_output_device_v2']/event[@name='stereo_pair']")
         self.assertEqual(pair_event.get('since'), '24')
@@ -136,6 +137,16 @@ class VirtualStereoContract(unittest.TestCase):
         self.assertEqual(glasses.get('since'), '29')
         self.assertEqual([(a.get('name'), a.get('type')) for a in glasses.findall('arg')], [('outputdevice', 'object'), ('enabled', 'uint')])
         self.assertEqual(glasses.find('arg').get('interface'), 'kde_output_device_v2')
+
+    def test_sequential_displayport(self):
+        # version 30: DisplayPort's frame sequential stereo, the eyes alternated and signalled by the source
+        protocol = ET.parse(ROOT / 'kde-output-device-v2.xml')
+        entry = protocol.find("interface[@name='kde_output_device_mode_v2']/enum[@name='flags']/entry[@name='stereo_sequential_displayport']")
+        self.assertEqual(int(entry.get('value'), 0), 0x1000000)
+        self.assertEqual(entry.get('since'), '30')
+        flags = protocol.find("interface[@name='kde_output_device_mode_v2']/event[@name='flags']/description").text
+        self.assertIn('stereo_sequential_displayport', flags)
+        self.assertIn('MISC1', flags)
 
     def test_native_viewport(self):
         protocol = ET.parse(ROOT / 'kde-output-device-v2.xml')
